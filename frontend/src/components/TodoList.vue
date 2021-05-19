@@ -2,8 +2,8 @@
   <TodoFilter />
   <ul class="TodoList_list">
     <TodoItem
-      v-for="todo in todos"
-      v-bind:key="todo.id"
+      v-for="(todo, index) in todos"
+      v-bind:key="index"
       v-bind:id="todo.id"
       v-bind:text="todo.text"
       v-bind:completed="todo.completed"

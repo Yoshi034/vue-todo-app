@@ -1,6 +1,7 @@
 <template>
   <div class="TodoBoard_content">
     <h2>Todo追加</h2>
+    <router-link to="/">一覧に戻る</router-link>
     <div class="TodoForm_content">
       <form class="TodoForm_form">
         <div class="TodoForm_input">
@@ -22,7 +23,7 @@
 import { defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "@/store/index";
-import { PostReq } from "../apis/models/ApiModels";
+import { PostRequest } from "@/store//models/PostRequest";
 
 type Params = {
   todoText: string;
@@ -39,7 +40,7 @@ export default defineComponent({
     const store = useStore();
 
     const onSubmit = async () => {
-      const req: PostReq = { text: data.todoText };
+      const req: PostRequest = { text: data.todoText };
       await store.dispatch("addTodo", req);
       router.push("/");
     };

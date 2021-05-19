@@ -1,54 +1,52 @@
 import { InjectionKey } from "vue";
 import { createStore, Store, useStore as baseUseStore } from "vuex";
 import axios from "axios";
-
-export type Todo = {
-  id: number;
-  text: string;
-  completed: boolean;
-};
+import { Todo } from "./models/Todo";
+import { GetResponse } from "./models/GetResponse";
+import { PostRequest } from "./models/PostRequest";
 
 export type State = {
   todos: Todo[];
 };
 
-export type Res = {
-  id: number;
-  text: string;
-  completed: boolean;
-};
-
-export type PostReq = {
-  text: string;
-};
-
-export type PutReq = {
-  todoId: string;
-  body: { completed: boolean };
-};
-
 // storeをprovide/injectするためのキー
 export const key: InjectionKey<Store<State>> = Symbol();
+
+// useStoreを使う時にキーの指定を省略するためのラッパー関数
+export const useStore = (): any => {
+  return baseUseStore(key);
+};
 
 export default createStore<State>({
   state: {
     todos: [],
   },
   mutations: {
+    /**
+     * Todoを設定する。
+     *
+     * @param state 状態
+     * @param payload 追加対象のTodo
+     */
     setTodoList(state, payload) {
       state.todos = payload.todos;
     },
+    /**
+     * 特定のTodoを削除する。
+     *
+     * @param state 状態
+     * @param payload 削除対象のTodoId
+     */
     removeTodo(state, payload) {
       state.todos = state.todos.filter((n) => n.id !== payload.removedTodoId);
     },
   },
   actions: {
     /**
-     * ToDoの取得
-     * @returns API結果
+     * ToDoの取得API呼び出し。
      */
     async getTodoList(context) {
-      const todos: Res[] = await axios
+      const todos: GetResponse = await axios
         .get(`${process.env.VUE_APP_API_BASE_URL}/api/todos`)
         .then((res) => {
           return res.data;
@@ -59,18 +57,16 @@ export default createStore<State>({
       context.commit("setTodoList", payload);
     },
     /**
-     * ToDoの追加
-     * @returns API結果
+     * ToDoの追加API呼び出し。
      */
-    async addTodo(context, reqBody: PostReq) {
+    async addTodo(context, reqBody: PostRequest) {
       await axios.post(
         `${process.env.VUE_APP_API_BASE_URL}/api/todos`,
         reqBody
       );
     },
     /**
-     * ToDoの削除
-     * @returns API結果
+     * ToDoの削除API呼び出し
      */
     async deleteTodo(context, todoId: number) {
       await axios.delete(
@@ -84,8 +80,3 @@ export default createStore<State>({
   },
   modules: {},
 });
-
-// useStoreを使う時にキーの指定を省略するためのラッパー関数
-export const useStore = (): any => {
-  return baseUseStore(key);
-};
