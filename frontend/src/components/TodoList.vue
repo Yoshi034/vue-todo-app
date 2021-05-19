@@ -1,18 +1,32 @@
 <template>
+  <TodoFilter />
   <ul class="TodoList_list">
-    <TodoItem text="洗い物をする" v-bind:completed="true"></TodoItem>
-    <TodoItem text="洗濯物を干す" v-bind:completed="false" />
-    <TodoItem text="買い物へ行く" v-bind:completed="false" />
+    <TodoItem
+      v-for="todo in todos"
+      v-bind:key="todo.id"
+      v-bind:id="todo.id"
+      v-bind:text="todo.text"
+      v-bind:completed="todo.completed"
+    ></TodoItem>
   </ul>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
+import TodoFilter from "@/components/TodoFilter.vue";
 import TodoItem from "@/components/TodoItem.vue";
+import { useStore } from "@/store/index";
 
 export default defineComponent({
   name: "TodoList",
-  components: { TodoItem },
+  components: { TodoFilter, TodoItem },
+
+  async setup() {
+    const store = useStore();
+    const todos = computed(() => store.state.todos);
+    await store.dispatch("getTodoList");
+    return { todos };
+  },
 });
 </script>
 

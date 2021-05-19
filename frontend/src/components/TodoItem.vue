@@ -11,19 +11,30 @@
       </label>
     </div>
     <div class="TodoItem_delete">
-      <button class="TodoItem_button">x</button>
+      <button class="TodoItem_button" @click="removeTodo">x</button>
     </div>
   </li>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { useStore } from "@/store/index";
 
 export default defineComponent({
   name: "TodoItem",
   props: {
+    id: Number,
     text: String,
     completed: Boolean,
+  },
+  setup(props) {
+    const store = useStore();
+    // Todoの削除
+    const removeTodo = () => {
+      store.dispatch("deleteTodo", props.id);
+    };
+
+    return { removeTodo };
   },
 });
 </script>

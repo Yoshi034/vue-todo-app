@@ -1,24 +1,29 @@
 <template>
   <div class="TodoBoard_content">
-    <TodoFilter></TodoFilter>
-    <TodoForm></TodoForm>
-    <TodoList></TodoList>
+    <h2>Todo一覧</h2>
+    <router-link to="/add">新規追加</router-link>
+    <Suspense>
+      <template #default>
+        <TodoList />
+      </template>
+      <template #fallback>
+        <div>Loading...</div>
+      </template>
+    </Suspense>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import TodoForm from "@/components/TodoForm.vue";
-import TodoFilter from "@/components/TodoFilter.vue";
 import TodoList from "@/components/TodoList.vue";
 
 export default defineComponent({
   name: "TodoBoard",
-  components: { TodoForm, TodoFilter, TodoList },
+  components: { TodoList },
 });
 </script>
 
-<style scoped>
+<style>
 .TodoBoard_content {
   margin-top: 10px;
   width: 40%;
