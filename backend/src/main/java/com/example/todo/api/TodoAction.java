@@ -10,6 +10,7 @@ import nablarch.fw.web.HttpRequest;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -30,11 +31,20 @@ public class TodoAction {
     public TodoResponse put(HttpRequest request, ExecutionContext context, PutRequest requestBody) {
         ValidatorUtil.validate(requestBody);
 
-        UserId userId = new UserId("1002");
+        UserId userId = new UserId("1001");
         TodoId todoId = new TodoId(Long.valueOf(request.getParam("todoId")[0]));
         TodoStatus status = requestBody.completed ? TodoStatus.COMPLETED : TodoStatus.INCOMPLETE;
 
         Todo todo = todoService.updateStatus(userId, todoId, status);
+
+        return new TodoResponse(todo.id(), todo.text(), todo.status());
+    }
+
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    public TodoResponse delete(HttpRequest request, ExecutionContext context) {
+        TodoId todoId = new TodoId(Long.valueOf(request.getParam("todoId")[0]));
+        Todo todo = todoService.deleteTodo(todoId);
 
         return new TodoResponse(todo.id(), todo.text(), todo.status());
     }

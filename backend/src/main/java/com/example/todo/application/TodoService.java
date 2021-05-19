@@ -32,4 +32,7 @@ public class TodoService {
         todoRepository.update(userId, changedTodo);
         return changedTodo;
     }
+    public Todo deleteTodo(TodoId todoId) {
+        return todoRepository.delete(todoId);
+    }
 }

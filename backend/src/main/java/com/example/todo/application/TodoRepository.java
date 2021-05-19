@@ -17,5 +17,6 @@ public interface TodoRepository {
     Todo get(TodoId todoId);
 
     void update(UserId userId, Todo todo);
+    Todo delete(TodoId todoId);
 
 }

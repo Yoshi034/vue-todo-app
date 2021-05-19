@@ -55,6 +55,13 @@ public class JdbcTodoRepository implements TodoRepository {
         UniversalDao.update(todoEntity);
     }
 
+    @Override
+    public Todo delete(TodoId todoId) {
+        TodoEntity todoEntity = UniversalDao.findById(TodoEntity.class, todoId.value());
+        UniversalDao.delete(todoEntity);
+        return createTodo(todoEntity);
+    }
+
     private Todo createTodo(TodoEntity entity) {
         return new Todo(
                 new TodoId(entity.getTodoId()),

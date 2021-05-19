@@ -52,7 +52,7 @@ public class TodosAction {
     public TodoResponse post(PostRequest requestBody) {
         ValidatorUtil.validate(requestBody);
 
-        UserId userId = new UserId("1002");
+        UserId userId = new UserId("1001");
         TodoText text = new TodoText(requestBody.text);
 
         Todo todo = todoService.addTodo(userId, text);
