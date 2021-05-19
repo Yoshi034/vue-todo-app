@@ -21,6 +21,39 @@ export default createStore<State>({
   state: {
     todos: [],
   },
+  getters: {
+    /**
+     * 全てのTodoを取得する。
+     *
+     * @param store ストア
+     * @returns 全てのTodo
+     */
+    getAllTodos: (store) => {
+      console.log("全て絞り込み");
+      return store.todos;
+    },
+    /**
+     * 完了済のTodoを取得する。
+     *
+     * @param store ストア
+     * @returns 完了済のTodo
+     */
+    getCompletedTodos: (store) => {
+      console.log("完了絞り込み");
+      console.log(store.todos.filter((todo) => todo.completed));
+      return store.todos.filter((todo) => todo.completed);
+    },
+    /**
+     * 未完了のTodoを取得する。
+     *
+     * @param store ストア
+     * @returns 未完了のTodo
+     */
+    getIncompletedTodos: (store) => {
+      console.log("未完了絞り込み");
+      return store.todos.filter((todo) => !todo.completed);
+    },
+  },
   mutations: {
     /**
      * Todoを設定する。
