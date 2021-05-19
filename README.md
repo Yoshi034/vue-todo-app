@@ -63,6 +63,8 @@ docker-compose -f docker/docker-compose.dev.yml down
 
 バックエンドアプリを起動するため、backend ディレクトリで次のコマンドを実行します。
 
+なお、アプリを起動するとDBの中身も初期化されます。
+
 ```
 mvn jetty:run
 ```
