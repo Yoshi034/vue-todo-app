@@ -1,5 +1,5 @@
 <template>
-  <TodoFilter @fillter-event="fillterTodo" />
+  <TodoFilter v-bind:filterType="filterType" @fillter-event="fillterTodo" />
   <ul class="TodoList_list" v-if="filterType === 'ALL'">
     <TodoItem
       v-for="(todo, index) in allTodos"
@@ -40,9 +40,12 @@ export default defineComponent({
   components: { TodoFilter, TodoItem },
 
   async setup() {
+    // ストアの取得
     const store = useStore();
+    // Todo取得API呼び出し
     await store.dispatch("getTodoList");
 
+    // 絞り込み時のコールバック関数
     const fillterTodo = (conditions: FilterType) => {
       const payload = {
         filterType: conditions,
@@ -51,9 +54,13 @@ export default defineComponent({
     };
 
     return {
+      // ストアから取得したTodo全件
       allTodos: computed(() => store.getters.getAllTodos),
+      // ストアから取得した完了済みのTodo
       completedTodos: computed(() => store.getters.getCompletedTodos),
+      // ストアから取得した未完了のTodo
       incompletedTodos: computed(() => store.getters.getIncompletedTodos),
+      // ストアから取得した絞り込みの種類
       filterType: computed(() => store.state.filterType),
       fillterTodo,
     };

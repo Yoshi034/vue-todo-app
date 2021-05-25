@@ -1,16 +1,34 @@
 <template>
   <div class="TodoFilter_content">
-    <button class="TodoFilter_buttonSelected" @click="fillterTodos('ALL')">
+    <button
+      :class="
+        props.filterType === 'ALL'
+          ? 'TodoFilter_buttonSelected'
+          : 'TodoFilter_buttonUnselected'
+      "
+      :disabled="props.filterType === 'ALL'"
+      @click="fillterTodos('ALL')"
+    >
       全て
     </button>
     <button
-      class="TodoFilter_buttonUnselected"
+      :class="
+        props.filterType === 'COMPLETED'
+          ? 'TodoFilter_buttonSelected'
+          : 'TodoFilter_buttonUnselected'
+      "
+      :disabled="props.filterType === 'COMPLETED'"
       @click="fillterTodos('COMPLETED')"
     >
       完了のみ
     </button>
     <button
-      class="TodoFilter_buttonUnselected"
+      :class="
+        props.filterType === 'INCOMPLETED'
+          ? 'TodoFilter_buttonSelected'
+          : 'TodoFilter_buttonUnselected'
+      "
+      :disabled="props.filterType === 'INCOMPLETED'"
       @click="fillterTodos('INCOMPLETED')"
     >
       未完了のみ
@@ -24,13 +42,16 @@ import { FilterType } from "@/store/index";
 
 export default defineComponent({
   name: "TodoFilter",
+  props: {
+    filterType: String,
+  },
   setup(props, { emit }) {
     // ボタンのイベントハンドラ
     const fillterTodos = (conditions: FilterType) => {
       emit("fillter-event", conditions);
     };
 
-    return { fillterTodos };
+    return { fillterTodos, props };
   },
 });
 </script>
