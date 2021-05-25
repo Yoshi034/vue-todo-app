@@ -11,7 +11,7 @@
     </button>
     <button
       class="TodoFilter_buttonUnselected"
-      @click="fillterTodos('INCOMPLETE')"
+      @click="fillterTodos('INCOMPLETED')"
     >
       未完了のみ
     </button>
@@ -20,15 +20,13 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-
-export type FilterType = "ALL" | "COMPLETED" | "INCOMPLETE";
+import { FilterType } from "@/store/index";
 
 export default defineComponent({
   name: "TodoFilter",
   setup(props, { emit }) {
     // ボタンのイベントハンドラ
     const fillterTodos = (conditions: FilterType) => {
-      console.log("フィルター呼び出し");
       emit("fillter-event", conditions);
     };
 

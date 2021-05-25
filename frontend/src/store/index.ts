@@ -5,8 +5,11 @@ import { Todo } from "./models/Todo";
 import { GetResponse } from "./models/GetResponse";
 import { PostRequest } from "./models/PostRequest";
 
+export type FilterType = "ALL" | "COMPLETED" | "INCOMPLETED";
+
 export type State = {
   todos: Todo[];
+  filterType: FilterType;
 };
 
 // storeをprovide/injectするためのキー
@@ -20,6 +23,7 @@ export const useStore = (): any => {
 export default createStore<State>({
   state: {
     todos: [],
+    filterType: "ALL",
   },
   getters: {
     /**
@@ -29,7 +33,6 @@ export default createStore<State>({
      * @returns 全てのTodo
      */
     getAllTodos: (store) => {
-      console.log("全て絞り込み");
       return store.todos;
     },
     /**
@@ -39,8 +42,6 @@ export default createStore<State>({
      * @returns 完了済のTodo
      */
     getCompletedTodos: (store) => {
-      console.log("完了絞り込み");
-      console.log(store.todos.filter((todo) => todo.completed));
       return store.todos.filter((todo) => todo.completed);
     },
     /**
@@ -50,11 +51,19 @@ export default createStore<State>({
      * @returns 未完了のTodo
      */
     getIncompletedTodos: (store) => {
-      console.log("未完了絞り込み");
       return store.todos.filter((todo) => !todo.completed);
     },
   },
   mutations: {
+    /**
+     * filterTypeを設定する。
+     *
+     * @param state 状態
+     * @param payload filterType
+     */
+    setFilterType(state, payload) {
+      state.filterType = payload.filterType;
+    },
     /**
      * Todoを設定する。
      *

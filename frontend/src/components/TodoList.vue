@@ -1,8 +1,26 @@
 <template>
   <TodoFilter @fillter-event="fillterTodo" />
-  <ul class="TodoList_list">
+  <ul class="TodoList_list" v-if="filterType === 'ALL'">
     <TodoItem
-      v-for="(todo, index) in todos"
+      v-for="(todo, index) in allTodos"
+      v-bind:key="index"
+      v-bind:id="todo.id"
+      v-bind:text="todo.text"
+      v-bind:completed="todo.completed"
+    />
+  </ul>
+  <ul class="TodoList_list" v-else-if="filterType === 'COMPLETED'">
+    <TodoItem
+      v-for="(todo, index) in completedTodos"
+      v-bind:key="index"
+      v-bind:id="todo.id"
+      v-bind:text="todo.text"
+      v-bind:completed="todo.completed"
+    />
+  </ul>
+  <ul class="TodoList_list" v-else-if="filterType === 'INCOMPLETED'">
+    <TodoItem
+      v-for="(todo, index) in incompletedTodos"
       v-bind:key="index"
       v-bind:id="todo.id"
       v-bind:text="todo.text"
@@ -14,11 +32,8 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import TodoFilter from "@/components/TodoFilter.vue";
-import { FilterType } from "@/components/TodoFilter.vue";
 import TodoItem from "@/components/TodoItem.vue";
-import { useStore } from "@/store/index";
-
-// export type FilterType = "ALL" | "COMPLETED" | "INCOMPLETE";
+import { useStore, FilterType } from "@/store/index";
 
 export default defineComponent({
   name: "TodoList",
@@ -27,26 +42,21 @@ export default defineComponent({
   async setup() {
     const store = useStore();
     await store.dispatch("getTodoList");
-    let todos = computed(() => store.getters.getAllTodos);
-    console.log(todos);
 
     const fillterTodo = (conditions: FilterType) => {
-      console.log("filter呼び出し2");
-      console.log(conditions);
-      if (conditions === "ALL") {
-        todos = computed(() => store.getters.getAllTodos);
-        console.log(todos);
-      } else if (conditions === "COMPLETED") {
-        console.log("完了if");
-        todos = computed(() => store.getters.getCompletedTodos);
-        console.log(todos);
-      } else if (conditions === "INCOMPLETE") {
-        todos = computed(() => store.getters.getIncompletedTodos);
-        console.log(todos);
-      }
+      const payload = {
+        filterType: conditions,
+      };
+      store.commit("setFilterType", payload);
     };
 
-    return { todos, fillterTodo };
+    return {
+      allTodos: computed(() => store.getters.getAllTodos),
+      completedTodos: computed(() => store.getters.getCompletedTodos),
+      incompletedTodos: computed(() => store.getters.getIncompletedTodos),
+      filterType: computed(() => store.state.filterType),
+      fillterTodo,
+    };
   },
 });
 </script>
